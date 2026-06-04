@@ -1,3 +1,7 @@
+# ARCHITECTURE NOTE:
+# This file belongs to the legacy filing/tagging-first pipeline.
+# Do not extend this as the authority for the new transform-first pipeline.
+# See docs/debt/ARCHITECTURAL_DEBT_MAP.md.
 """
 process_one_file_v2.py
 Purpose: Refactored single-file processor using external libraries for all heavy lifting.

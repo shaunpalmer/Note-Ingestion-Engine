@@ -1,0 +1,373 @@
+{
+  "document_name": "GOLDEN_PATH_TEST_GUARDRAILS",
+  "status": "architecture_confidence_harness",
+  "purpose": "Define a small, trusted test set that proves the pipeline direction before expanding the system.",
+  "north_star": "The project is successful only if real mixed-format source files become useful, trusted, searchable, linked Obsidian notes.",
+  "core_problem_this_solves": [
+    "AI can write code where every line appears correct but the architecture is wrong.",
+    "A pipeline can process files successfully while producing low-value notes.",
+    "Extraction can appear to work while silently losing important content.",
+    "Tagging can look useful while failing to support retrieval or decision-making.",
+    "The system needs practical confidence before scaling."
+  ],
+  "golden_path_rule": "Before adding more formats, OCR, media, or routing complexity, the system must pass the golden path test set.",
+  "golden_test_files": [
+    {
+      "id": "GP-001",
+      "name": "simple_markdown_note",
+      "format": ".md",
+      "purpose": "Prove the pipeline can process existing Obsidian-style text without damaging it.",
+      "expected_result": [
+        "Extracts clean text",
+        "Keeps source provenance",
+        "Produces a DecisionNote",
+        "Suggests sensible tags and links",
+        "Does not over-transform simple useful notes"
+      ]
+    },
+    {
+      "id": "GP-002",
+      "name": "plain_text_scrap",
+      "format": ".txt",
+      "purpose": "Prove the gate can distinguish useful scraps from junk.",
+      "expected_result": [
+        "Detects whether there is meaningful content",
+        "Routes obvious junk to review or low-value handling",
+        "Does not waste heavy LLM reasoning on empty noise"
+      ]
+    },
+    {
+      "id": "GP-003",
+      "name": "text_pdf",
+      "format": ".pdf",
+      "purpose": "Prove normal PDF text extraction works.",
+      "expected_result": [
+        "Extracts readable PDF text",
+        "Does not mark text PDF as OCR-needed",
+        "Preserves title, dates, names, and key facts",
+        "Creates useful Obsidian note"
+      ]
+    },
+    {
+      "id": "GP-004",
+      "name": "scanned_or_image_pdf",
+      "format": ".pdf",
+      "purpose": "Prove the system can detect OCR-needed documents safely.",
+      "expected_result": [
+        "Does not treat failed extraction as scrap",
+        "Returns status: ocr_needed",
+        "Moves item to review/ocr_needed queue",
+        "Preserves source path and hash"
+      ]
+    },
+    {
+      "id": "GP-005",
+      "name": "modern_word_document",
+      "format": ".docx",
+      "purpose": "Prove modern Word extraction works.",
+      "expected_result": [
+        "Uses modern Word parser",
+        "Extracts headings and body text",
+        "Creates structured summary",
+        "Preserves important facts"
+      ]
+    },
+    {
+      "id": "GP-006",
+      "name": "legacy_word_document",
+      "format": ".doc",
+      "purpose": "Prove legacy Word is treated as different from modern Word.",
+      "expected_result": [
+        "Does not send .doc to python-docx",
+        "Detects legacy binary/OLE format",
+        "Returns ok, unsupported, corrupt, or metadata_only honestly",
+        "Never silently returns empty text as if the file has no value"
+      ]
+    },
+    {
+      "id": "GP-007",
+      "name": "modern_excel_file",
+      "format": ".xlsx",
+      "purpose": "Prove spreadsheet extraction creates useful summary, not unreadable table dump.",
+      "expected_result": [
+        "Extracts sheet names",
+        "Summarises visible tables",
+        "Preserves key figures",
+        "Identifies whether this is invoice, budget, quote, job costing, or data reference"
+      ]
+    },
+    {
+      "id": "GP-008",
+      "name": "legacy_excel_file",
+      "format": ".xls",
+      "purpose": "Prove legacy Excel is treated separately from modern Excel.",
+      "expected_result": [
+        "Does not use openpyxl for .xls",
+        "Detects legacy spreadsheet format",
+        "Returns honest extraction status",
+        "Preserves file provenance even if extraction is partial"
+      ]
+    },
+    {
+      "id": "GP-009",
+      "name": "project_studios_business_file",
+      "format": "any",
+      "purpose": "Prove business-area classification works for Project Studios.",
+      "expected_result": [
+        "business_area includes Project Studios",
+        "Topics may include SEO, PPC, web design, WordPress, lead generation, client work, or strategy",
+        "Possible actions are useful",
+        "Future questions are generated"
+      ]
+    },
+    {
+      "id": "GP-010",
+      "name": "super_clean_business_file",
+      "format": "any",
+      "purpose": "Prove business-area classification works for Super Clean Services.",
+      "expected_result": [
+        "business_area includes Super Clean Services",
+        "Topics may include tenancy cleaning, carpet cleaning, window cleaning, quoting, customers, staff, jobs, invoices, or marketing",
+        "Preserves prices, dates, customer names, job details, and obligations",
+        "Does not reduce operational records to vague summaries"
+      ]
+    },
+    {
+      "id": "GP-011",
+      "name": "how_to_or_technical_note",
+      "format": ".md or .txt",
+      "purpose": "Prove the system recognises procedural knowledge.",
+      "expected_result": [
+        "note_type is how-to",
+        "Steps are preserved",
+        "Commands are preserved exactly",
+        "Warnings and gotchas are captured",
+        "Future question examples include how-to retrieval"
+      ]
+    },
+    {
+      "id": "GP-012",
+      "name": "low_value_junk_file",
+      "format": ".log, .txt, or random export",
+      "purpose": "Prove the gate and review policy prevent garbage from becoming polished garbage.",
+      "expected_result": [
+        "High scrap_score",
+        "Low value_score unless a useful fact exists",
+        "Routed to review or low-value archive",
+        "No confident over-summary"
+      ]
+    }
+  ],
+  "architecture_tests": {
+    "stage_1_extract": [
+      "Every file returns an ExtractionResult object.",
+      "ExtractionResult must include status.",
+      "Extraction failure must not equal empty content.",
+      "Legacy and modern formats must be separated.",
+      "Source hash must be captured."
+    ],
+    "stage_2_gate": [
+      "Gate runs before the LLM.",
+      "Gate can stop obvious junk.",
+      "Gate can send uncertain files to review.",
+      "Gate must not rely on LLM confidence.",
+      "Gate must preserve provenance."
+    ],
+    "stage_3_transform": [
+      "LLM returns DecisionNote, not just tags.",
+      "DecisionNote includes summary, why_it_matters, key_points, facts, links, future questions, uncertainty, and discarded summary.",
+      "The result must be useful to Shaun in Obsidian.",
+      "The result must separate facts from interpretation."
+    ],
+    "stage_4_compose": [
+      "Creates readable Markdown.",
+      "Includes YAML frontmatter.",
+      "Includes source provenance.",
+      "Includes structured retrieval fields.",
+      "Does not only create sidecar metadata."
+    ],
+    "stage_5_place_and_record": [
+      "Placement is last.",
+      "State is updated through one canonical StateManager.",
+      "Collision policy is respected.",
+      "Review-needed files are not hidden.",
+      "Folders do not become the architecture."
+    ]
+  },
+  "pass_fail_rules": {
+    "hard_fail_if": [
+      "Any file is silently treated as empty after failed extraction.",
+      ".doc is processed as if it were .docx.",
+      ".xls is processed as if it were .xlsx.",
+      "The LLM is called before the deterministic gate.",
+      "The output is only title, summary, tags, and confidence.",
+      "The note lacks source provenance.",
+      "The system writes state using more than one schema.",
+      "Bash mutates state or performs data logic.",
+      "A low-value file becomes a polished fake-useful note.",
+      "Existing vault files can be overwritten without collision policy."
+    ],
+    "soft_fail_if": [
+      "Tags are vague or inconsistent.",
+      "Future questions are generic.",
+      "Possible actions are generic.",
+      "Business area is missing when obvious.",
+      "People or organisations are missed.",
+      "Raw excerpt is missing for high-value source material.",
+      "Uncertainty is present but unexplained."
+    ],
+    "pass_condition": "At least 8 out of 10 reviewed golden path outputs, or an equivalent representative sample, must be clearly more useful than the raw source and must preserve trust/provenance."
+  },
+  "recommended_test_structure": {
+    "tests": {
+      "golden_path": {
+        "fixtures": {
+          "markdown": [
+            "GP-001-simple-markdown-note.md"
+          ],
+          "text": [
+            "GP-002-plain-text-scrap.txt",
+            "GP-012-low-value-junk.txt"
+          ],
+          "pdf": [
+            "GP-003-text-pdf.pdf",
+            "GP-004-scanned-pdf.pdf"
+          ],
+          "word": [
+            "GP-005-modern-word.docx",
+            "GP-006-legacy-word.doc"
+          ],
+          "excel": [
+            "GP-007-modern-excel.xlsx",
+            "GP-008-legacy-excel.xls"
+          ],
+          "business": [
+            "GP-009-project-studios-file.md",
+            "GP-010-super-clean-file.md"
+          ],
+          "technical": [
+            "GP-011-how-to-technical-note.md"
+          ]
+        },
+        "expected": {
+          "extraction_results": "Expected ExtractionResult JSON outputs",
+          "gate_decisions": "Expected deterministic GateDecision JSON outputs",
+          "decision_notes": "Expected DecisionNote JSON outputs",
+          "markdown_notes": "Expected composed Obsidian Markdown outputs"
+        },
+        "reports": [
+          "golden-path-review-report.md"
+        ]
+      }
+    }
+  },
+  "confidence_types": {
+    "extraction_confidence": "Did we correctly read or classify the source file?",
+    "architecture_confidence": "Did the file move through the proper stages without shortcuts?",
+    "knowledge_confidence": "Did the output note recover useful value?",
+    "trust_confidence": "Can Shaun see where the information came from and what is uncertain?"
+  },
+  "practical_review_table": [
+    {
+      "test_id": "GP-001",
+      "file_type": "Markdown",
+      "main_risk": "Over-processing",
+      "must_prove": "Useful note without damaging source"
+    },
+    {
+      "test_id": "GP-002",
+      "file_type": "TXT scrap",
+      "main_risk": "Junk promotion",
+      "must_prove": "Gate handles scraps"
+    },
+    {
+      "test_id": "GP-003",
+      "file_type": "Text PDF",
+      "main_risk": "Weak extraction",
+      "must_prove": "Text extracted correctly"
+    },
+    {
+      "test_id": "GP-004",
+      "file_type": "Scanned PDF",
+      "main_risk": "Silent empty failure",
+      "must_prove": "Marked OCR-needed"
+    },
+    {
+      "test_id": "GP-005",
+      "file_type": "DOCX",
+      "main_risk": "Basic Office parsing",
+      "must_prove": "Modern Word works"
+    },
+    {
+      "test_id": "GP-006",
+      "file_type": "DOC",
+      "main_risk": "Legacy format confusion",
+      "must_prove": "Not treated as DOCX"
+    },
+    {
+      "test_id": "GP-007",
+      "file_type": "XLSX",
+      "main_risk": "Table dump noise",
+      "must_prove": "Key figures summarised"
+    },
+    {
+      "test_id": "GP-008",
+      "file_type": "XLS",
+      "main_risk": "Legacy spreadsheet confusion",
+      "must_prove": "Not treated as XLSX"
+    },
+    {
+      "test_id": "GP-009",
+      "file_type": "Project Studios",
+      "main_risk": "Business retrieval",
+      "must_prove": "Correct business area/actions"
+    },
+    {
+      "test_id": "GP-010",
+      "file_type": "Super Clean",
+      "main_risk": "Operational detail loss",
+      "must_prove": "Facts/prices/jobs preserved"
+    },
+    {
+      "test_id": "GP-011",
+      "file_type": "How-to",
+      "main_risk": "Command loss",
+      "must_prove": "Steps/commands preserved"
+    },
+    {
+      "test_id": "GP-012",
+      "file_type": "Junk/log",
+      "main_risk": "Polished rubbish",
+      "must_prove": "High scrap/low value/review"
+    }
+  ],
+  "copilot_instruction": {
+    "mode": "golden_path_architecture_testing",
+    "do_not": [
+      "Do not write broad new extraction features yet.",
+      "Do not rewrite the whole project.",
+      "Do not optimise the legacy pipeline.",
+      "Do not create clever abstractions that are not required by the golden path.",
+      "Do not use passing code as proof of good architecture."
+    ],
+    "do": [
+      "Create or review the golden path test plan first.",
+      "Map each test file to pipeline stages.",
+      "Identify what current code can already pass.",
+      "Identify what fails because of architecture.",
+      "Identify what fails because of missing libraries.",
+      "Identify what fails because of missing schemas.",
+      "Recommend the smallest next change that improves architectural confidence."
+    ],
+    "required_output": [
+      "Golden path coverage table",
+      "Current pass/fail estimate",
+      "Required contracts",
+      "Missing libraries",
+      "Architecture risks",
+      "Next three safe implementation steps"
+    ]
+  },
+  "main_test_philosophy": "The goal is not whether the script can run. The goal is whether the system can process a messy real-world sample without lying, losing value, or turning into spaghetti.",
+  "strong_summary": "This test set is an architecture confidence harness. It proves that the pipeline can handle real mixed material, preserve trust, avoid silent failure, and produce useful Obsidian notes before scaling extraction, OCR, media handling, or folder routing. Passing means the system produces decision-ready knowledge. Failing means the architecture is still wrong, even if the code runs."
+}

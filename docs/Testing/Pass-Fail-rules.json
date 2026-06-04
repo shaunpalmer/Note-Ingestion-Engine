@@ -1,0 +1,26 @@
+{
+  "pass_fail_rules": {
+    "hard_fail_if": [
+      "Any file is silently treated as empty after failed extraction.",
+      ".doc is processed as if it were .docx.",
+      ".xls is processed as if it were .xlsx.",
+      "The LLM is called before the deterministic gate.",
+      "The output is only title, summary, tags, and confidence.",
+      "The note lacks source provenance.",
+      "The system writes state using more than one schema.",
+      "Bash mutates state or performs data logic.",
+      "A low-value file becomes a polished fake-useful note.",
+      "Existing vault files can be overwritten without collision policy."
+    ],
+    "soft_fail_if": [
+      "Tags are vague or inconsistent.",
+      "Future questions are generic.",
+      "Possible actions are generic.",
+      "Business area is missing when obvious.",
+      "People or organisations are missed.",
+      "Raw excerpt is missing for high-value source material.",
+      "Uncertainty is present but unexplained."
+    ],
+    "pass_condition": "At least 8 out of 10 golden path outputs must be clearly more useful than the raw source and must preserve trust/provenance."
+  }
+}

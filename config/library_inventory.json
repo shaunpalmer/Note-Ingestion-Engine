@@ -1,0 +1,62 @@
+{
+  "purpose": "Layered dependency inventory for the transform-first knowledge pipeline.",
+  "rule": "Do not install every library at once. Install by phase as the golden path proves each layer.",
+  "phases": {
+    "phase_1_core_now": {
+      "description": "Contracts, state, config, frontmatter, Ollama calls, retry logic, file detection, text encoding, and tests.",
+      "requirements_file": "requirements-core.txt",
+      "libraries": [
+        {"package": "pydantic", "purpose": "Pydantic contracts for ExtractionResult, GateDecision, DecisionNote, and StateEntry."},
+        {"package": "filelock", "purpose": "Atomic/locked state writes through the canonical StateManager."},
+        {"package": "python-frontmatter", "purpose": "Read and write Obsidian-compatible YAML frontmatter."},
+        {"package": "PyYAML", "purpose": "YAML support for frontmatter and small config files."},
+        {"package": "requests", "purpose": "HTTP calls to local Ollama/LLM endpoints."},
+        {"package": "tenacity", "purpose": "Retry logic around local LLM and fragile extraction boundaries."},
+        {"package": "python-magic", "purpose": "MIME/magic-byte detection so extension is not treated as truth."},
+        {"package": "charset-normalizer", "purpose": "Detect and handle messy text encodings."},
+        {"package": "pytest", "purpose": "Golden path and contract tests."}
+      ]
+    },
+    "phase_2_documents_later": {
+      "description": "Document extraction after core contracts and golden path tests exist.",
+      "requirements_file": "requirements-documents.txt",
+      "libraries": [
+        {"package": "python-docx", "formats": [".docx"], "purpose": "Modern Word XML documents."},
+        {"package": "olefile", "formats": [".doc", ".xls", ".ppt"], "purpose": "Inspect legacy Microsoft OLE compound files without confusing them with modern XML formats."},
+        {"package": "striprtf", "formats": [".rtf"], "purpose": "Extract text from RTF."},
+        {"package": "openpyxl", "formats": [".xlsx", ".xlsm"], "purpose": "Modern Excel XML spreadsheets."},
+        {"package": "xlrd", "formats": [".xls"], "purpose": "Legacy Excel spreadsheets."},
+        {"package": "python-pptx", "formats": [".pptx"], "purpose": "Modern PowerPoint presentations."},
+        {"package": "pymupdf", "formats": [".pdf"], "purpose": "Fast PDF text, metadata, and page inspection."},
+        {"package": "pdfplumber", "formats": [".pdf"], "purpose": "Layout-aware PDF text/table extraction."},
+        {"package": "beautifulsoup4", "formats": [".html", ".htm"], "purpose": "Clean HTML extraction."},
+        {"package": "lxml", "formats": [".html", ".xml"], "purpose": "Fast parser backend for HTML/XML."},
+        {"package": "pandas", "formats": [".csv", ".xlsx", ".xls"], "purpose": "Tabular previews and spreadsheet summaries."}
+      ]
+    },
+    "phase_3_ocr_media_later": {
+      "description": "OCR, image, audio, video, and design-file metadata after transform-first golden path is proven.",
+      "requirements_file": "requirements-ocr-media.txt",
+      "libraries": [
+        {"package": "pytesseract", "purpose": "OCR wrapper for scanned PDFs and images."},
+        {"package": "pdf2image", "purpose": "Convert PDF pages to images for OCR."},
+        {"package": "Pillow", "purpose": "Image handling for OCR and metadata."},
+        {"package": "faster-whisper", "purpose": "Local speech-to-text transcription."},
+        {"package": "ffmpeg-python", "purpose": "Media probing and audio extraction from video."},
+        {"package": "psd-tools", "purpose": "PSD metadata and layer inspection."}
+      ]
+    }
+  },
+  "fedora_system_dependencies": {
+    "core_detection": ["file", "file-libs"],
+    "ocr": ["tesseract", "tesseract-langpack-eng", "poppler-utils"],
+    "media": ["ffmpeg"],
+    "metadata_optional": ["perl-Image-ExifTool"],
+    "office_conversion_optional": ["libreoffice"]
+  },
+  "blocked_for_now": [
+    "Do not install OCR/media stacks until the golden path contracts pass.",
+    "Do not add broad document extraction before ExtractionResult and GateDecision are locked.",
+    "Do not use dependency installation as proof of architectural progress."
+  ]
+}

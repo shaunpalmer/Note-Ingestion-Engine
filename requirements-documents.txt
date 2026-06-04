@@ -1,0 +1,11 @@
+python-docx
+olefile
+striprtf
+openpyxl
+xlrd
+python-pptx
+pymupdf
+pdfplumber
+beautifulsoup4
+lxml
+pandas

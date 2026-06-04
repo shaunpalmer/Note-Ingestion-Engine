@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ARCHITECTURE NOTE:
+# This file belongs to the legacy filing/tagging-first pipeline.
+# Do not extend this as the authority for the new transform-first pipeline.
+# See docs/debt/ARCHITECTURAL_DEBT_MAP.md.
 """
 scan_documents.py
 Purpose: Dry-run scanner for the document ingestion pipeline.

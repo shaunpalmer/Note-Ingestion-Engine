@@ -1,0 +1,319 @@
+{
+  "project": {
+    "name": "Local Knowledge Ingestion Pipeline",
+    "purpose": "Recover value from old, mixed-format files and turn them into trusted, searchable, linked, decision-ready Obsidian knowledge.",
+    "not_the_purpose": [
+      "Not merely sorting files",
+      "Not merely tagging documents",
+      "Not merely creating summaries",
+      "Not merely building a personal wiki",
+      "Not building a clever pipeline that produces low-value notes faster"
+    ],
+    "north_star": "The output note must help Shaun find, understand, trust, connect, or act on old material later."
+  },
+
+  "architecture_guardrails": {
+    "primary_rule": "Transformation comes before filing.",
+    "pipeline_order": [
+      "Extract",
+      "Gate",
+      "Think / Transform",
+      "Compose",
+      "Place and Record"
+    ],
+    "hard_rules": [
+      "Do not extend the legacy tag-and-file pipeline as the authority.",
+      "Do not write new feature code until ExtractionResult and DecisionNote schemas are locked.",
+      "Do not let bash contain data logic.",
+      "Do not let tags become the architecture.",
+      "Do not treat file extension as truth.",
+      "Do not treat empty extraction, corrupt files, OCR-needed files, unsupported files, and scrap as the same thing.",
+      "Do not use LLM self-confidence as the gate.",
+      "Do not auto-delete uncertain files.",
+      "Do not overwrite vault notes without a collision policy.",
+      "Do not build OCR/video/media before proving Stage 3 produces useful notes."
+    ],
+    "preferred_rules": [
+      "Use one config loader.",
+      "Use one state manager.",
+      "Use one canonical state schema.",
+      "Use SHA-256 source hashes for idempotency.",
+      "Use file locking and atomic writes for state.",
+      "Preserve original files untouched.",
+      "Write human-readable Markdown notes.",
+      "Use machine-readable sidecar metadata only as support, not as the main output.",
+      "Send uncertain files to review.",
+      "Record major design decisions as ADRs."
+    ]
+  },
+
+  "recommended_file_structure": {
+    "knowledge-pipeline": {
+      "config": [
+        "paths.conf",
+        "note_quality.md",
+        "scrap_heuristics.json",
+        "categories.json",
+        "business_areas.json",
+        "note_types.json",
+        "library_inventory.json"
+      ],
+      "docs": {
+        "adr": [
+          "ADR-001-purpose-is-transformation-not-filing.md",
+          "ADR-002-one-pipeline-one-state-one-config.md",
+          "ADR-003-llm-is-reasoner-not-tag-stamper.md",
+          "ADR-004-magic-bytes-before-extension.md",
+          "ADR-005-review-first-before-auto-archive.md"
+        ],
+        "design": [
+          "AI_ARCHITECTURE_GUARDRAILS.json",
+          "FILE_TYPE_STRATEGY.md",
+          "STAGE_3_DECISION_NOTE_CONTRACT.md"
+        ],
+        "reports": []
+      },
+      "src": {
+        "core": [
+          "orchestrator.py",
+          "config.py",
+          "models.py",
+          "registry.py"
+        ],
+        "adapters": [
+          "base.py",
+          "microsoft.py",
+          "google.py",
+          "adobe.py",
+          "plain_text.py",
+          "media.py"
+        ],
+        "utilities": {
+          "microsoft": [
+            "doc_legacy.py",
+            "docx_modern.py",
+            "rtf.py",
+            "xls_legacy.py",
+            "xlsx_modern.py",
+            "ppt_legacy.py",
+            "pptx_modern.py"
+          ],
+          "pdf": [
+            "text_pdf.py",
+            "ocr_pdf.py",
+            "pdf_classifier.py"
+          ],
+          "plain": [
+            "txt_extract.py",
+            "md_extract.py",
+            "csv_extract.py",
+            "json_extract.py",
+            "xml_extract.py",
+            "log_extract.py"
+          ],
+          "html": [
+            "html_extract.py"
+          ],
+          "adobe": [
+            "psd_metadata.py",
+            "ai_pdf_compatible.py",
+            "indd_metadata.py"
+          ],
+          "media": [
+            "audio_transcribe.py",
+            "video_transcribe.py",
+            "image_ocr.py"
+          ]
+        },
+        "gate": [
+          "emptiness.py",
+          "scrap_filter.py",
+          "duplicate_detector.py",
+          "ocr_detector.py",
+          "review_policy.py"
+        ],
+        "reason": [
+          "reasoner.py",
+          "prompts.py",
+          "validators.py"
+        ],
+        "llm": [
+          "client.py",
+          "circuit_breaker.py",
+          "fallback.py"
+        ],
+        "compose": [
+          "note_writer.py",
+          "frontmatter.py",
+          "sidecar_writer.py"
+        ],
+        "place": [
+          "router.py",
+          "collision_policy.py",
+          "review_queue.py"
+        ],
+        "state": [
+          "manager.py",
+          "schema.py",
+          "migration.py"
+        ],
+        "events": [
+          "signals.py",
+          "handlers.py"
+        ]
+      },
+      "runners": [
+        "run-ingest.sh",
+        "run-stage3-test.sh"
+      ],
+      "tests": {
+        "fixtures": [],
+        "golden": [],
+        "contract": []
+      },
+      "state": [
+        "processed-files.json"
+      ],
+      "review": [
+        "ocr_needed",
+        "unsupported",
+        "low_confidence",
+        "collision",
+        "needs_source_check"
+      ]
+    }
+  },
+
+  "core_contracts": {
+    "ExtractionResult": {
+      "purpose": "Stage 1 output contract. Extraction must report what happened, not merely return text.",
+      "fields": {
+        "text": "string",
+        "source_meta": {
+          "source_path": "string",
+          "source_hash": "sha256",
+          "detected_mime": "string",
+          "original_extension": "string",
+          "adapter_used": "string",
+          "created_at": "datetime|null",
+          "modified_at": "datetime|null"
+        },
+        "status": [
+          "ok",
+          "empty",
+          "ocr_needed",
+          "corrupt",
+          "unsupported",
+          "metadata_only"
+        ],
+        "warnings": "list[string]"
+      }
+    },
+    "DecisionNote": {
+      "purpose": "Stage 3 output contract. The LLM must recover usable knowledge, not merely tag the file.",
+      "fields": {
+        "title": "string",
+        "note_type": "string",
+        "essence": "string",
+        "summary": "string",
+        "why_it_matters": "list[string]",
+        "key_points": "list[string]",
+        "keep_facts": "list[string]",
+        "business_area": "list[string]",
+        "project": "list[string]",
+        "people": "list[string]",
+        "organisations": "list[string]",
+        "topics": "list[string]",
+        "proposed_links": "list[string]",
+        "tags": "list[string]",
+        "possible_actions": "list[string]",
+        "answers_future_questions": "list[string]",
+        "source_relevance": "string",
+        "value_score": "float_0_to_1",
+        "scrap_score": "float_0_to_1",
+        "uncertainty": "float_0_to_1",
+        "uncertainty_reason": "string",
+        "fact_interpretation_boundary": "string",
+        "discarded_summary": "string",
+        "raw_excerpt": "string"
+      }
+    }
+  },
+
+  "suggested_requirements_files": {
+    "requirements-core.txt": [
+      "pydantic",
+      "filelock",
+      "python-frontmatter",
+      "PyYAML",
+      "requests",
+      "tenacity",
+      "python-magic",
+      "charset-normalizer",
+      "pytest"
+    ],
+    "requirements-documents.txt": [
+      "python-docx",
+      "olefile",
+      "striprtf",
+      "openpyxl",
+      "xlrd",
+      "python-pptx",
+      "pymupdf",
+      "pdfplumber",
+      "beautifulsoup4",
+      "lxml",
+      "pandas"
+    ],
+    "requirements-ocr-media.txt": [
+      "pytesseract",
+      "pdf2image",
+      "Pillow",
+      "faster-whisper",
+      "ffmpeg-python",
+      "psd-tools"
+    ]
+  },
+
+  "fedora_system_dependencies": {
+    "core_detection": [
+      "file",
+      "file-libs"
+    ],
+    "ocr": [
+      "tesseract",
+      "tesseract-langpack-eng",
+      "poppler-utils"
+    ],
+    "media": [
+      "ffmpeg"
+    ],
+    "metadata_optional": [
+      "perl-Image-ExifTool"
+    ],
+    "office_conversion_optional": [
+      "libreoffice"
+    ]
+  },
+
+  "copilot_review_instructions": {
+    "mode": "review_before_code",
+    "instructions": [
+      "Evaluate current project against this guardrail file.",
+      "Do not write implementation code unless explicitly asked.",
+      "Do not optimise the old legacy flow.",
+      "Identify whether each existing file should be kept, wrapped, retired, or rewritten.",
+      "Check whether any proposed change improves retrieval, trust, provenance, transformation quality, or decision support.",
+      "Flag any work that only improves filing without improving knowledge recovery.",
+      "Treat Stage 3 output quality as the highest-risk/highest-value part of the system."
+    ]
+  },
+
+  "success_metrics": {
+    "bad_metric": "Number of files processed.",
+    "acceptable_metric": "Number of files safely extracted with known status.",
+    "better_metric": "Percentage of generated notes that are more useful than the raw source.",
+    "best_metric": "How often Shaun can find forgotten material and make a better decision from it.",
+    "manual_review_test": "Review 20 generated notes and ask: would this help me find, understand, trust, connect, or act on this material later?"
+  }
+}

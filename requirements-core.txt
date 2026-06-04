@@ -1,0 +1,9 @@
+pydantic
+filelock
+python-frontmatter
+PyYAML
+requests
+tenacity
+python-magic
+charset-normalizer
+pytest

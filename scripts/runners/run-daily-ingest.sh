@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# ARCHITECTURE NOTE:
+# Legacy runner. Bash should sequence only and must not own data/state logic
+# in the new transform-first architecture.
+# See docs/debt/ARCHITECTURAL_DEBT_MAP.md.
 set -euo pipefail
 
 # run-daily-ingest.sh

@@ -1,0 +1,44 @@
+{
+  "recommended_test_structure": {
+    "tests": {
+      "golden_path": {
+        "fixtures": {
+          "markdown": [
+            "GP-001-simple-markdown-note.md"
+          ],
+          "text": [
+            "GP-002-plain-text-scrap.txt",
+            "GP-012-low-value-junk.txt"
+          ],
+          "pdf": [
+            "GP-003-text-pdf.pdf",
+            "GP-004-scanned-pdf.pdf"
+          ],
+          "word": [
+            "GP-005-modern-word.docx",
+            "GP-006-legacy-word.doc"
+          ],
+          "excel": [
+            "GP-007-modern-excel.xlsx",
+            "GP-008-legacy-excel.xls"
+          ],
+          "business": [
+            "GP-009-project-studios-file.md",
+            "GP-010-super-clean-file.md"
+          ],
+          "technical": [
+            "GP-011-how-to-technical-note.md"
+          ]
+        },
+        "expected": {
+          "extraction_results": "Expected ExtractionResult JSON outputs",
+          "decision_notes": "Expected DecisionNote JSON outputs",
+          "markdown_notes": "Expected composed Obsidian Markdown outputs"
+        },
+        "reports": [
+          "golden-path-review-report.md"
+        ]
+      }
+    }
+  }
+}
