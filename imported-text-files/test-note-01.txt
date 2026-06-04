@@ -1,0 +1,1 @@
+I moved files from the side rig, tested Tailscale, and want a local AI to tag notes and create backlinks.

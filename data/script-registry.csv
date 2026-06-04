@@ -1,0 +1,20 @@
+script_name,path,language,purpose,risk_level,inputs,outputs,run_command,last_modified
+archive_low_value.py,scripts/ingestion/archive_low_value.py,python,,moves-files,,,python3 scripts/ingestion/archive_low_value.py,2026-05-26T04:03:57.180000
+bulk_convert_to_markdown.py,scripts/ingestion/bulk_convert_to_markdown.py,python,,writes-report,,,python3 scripts/ingestion/bulk_convert_to_markdown.py,2026-05-26T04:04:52.850000
+extract_text.py,scripts/ingestion/extract_text.py,python,,unknown,,,python3 scripts/ingestion/extract_text.py,2026-05-26T04:03:18.670000
+normalize_confidence.py,scripts/ingestion/normalize_confidence.py,python,,unknown,,,python3 scripts/ingestion/normalize_confidence.py,2026-05-26T04:05:39.280000
+process_one_file.py,scripts/ingestion/process_one_file.py,python,,unknown,,,python3 scripts/ingestion/process_one_file.py,2026-05-26T04:04:31.070000
+route_to_vault.py,scripts/ingestion/route_to_vault.py,python,,unknown,,,python3 scripts/ingestion/route_to_vault.py,2026-05-26T04:03:42.980000
+scan_documents.py,scripts/ingestion/scan_documents.py,python,,read-only,,,python3 scripts/ingestion/scan_documents.py,2026-05-26T03:34:42.540000
+write_daily_report.py,scripts/ingestion/write_daily_report.py,python,,writes-report,,,python3 scripts/ingestion/write_daily_report.py,2026-05-26T04:05:08.360000
+test-log.sh,scripts/log/test-log.sh,bash,,unknown,,,./scripts/log/test-log.sh,2026-05-26T02:57:49.230000
+write-log.sh,scripts/log/write-log.sh,bash,,writes-report,,,./scripts/log/write-log.sh,2026-05-26T02:57:44.380000
+check-network-status.sh,scripts/network/check-network-status.sh,bash,,read-only,,,./scripts/network/check-network-status.sh,2026-05-26T03:18:59.160000
+scan-obsidian-inbox.py,scripts/obsidian/scan-obsidian-inbox.py,python,,read-only,,,python3 scripts/obsidian/scan-obsidian-inbox.py,2026-05-26T03:21:19.440000
+check-ollama-status.sh,scripts/ollama/check-ollama-status.sh,bash,,read-only,,,./scripts/ollama/check-ollama-status.sh,2026-05-26T03:34:10.150000
+unload-ollama-model.sh,scripts/ollama/unload-ollama-model.sh,bash,,unknown,,,./scripts/ollama/unload-ollama-model.sh,2026-05-26T03:34:17.860000
+warm-ollama-model.sh,scripts/ollama/warm-ollama-model.sh,bash,,unknown,,,./scripts/ollama/warm-ollama-model.sh,2026-05-26T03:34:03.630000
+run-daily-ingest.sh,scripts/runners/run-daily-ingest.sh,bash,,unknown,,,./scripts/runners/run-daily-ingest.sh,2026-05-26T04:06:11.220000
+run-morning-checks.sh,scripts/runners/run-morning-checks.sh,bash,,read-only,,,./scripts/runners/run-morning-checks.sh,2026-05-26T03:35:32.070000
+register-scripts.py,scripts/script-registration/register-scripts.py,python,,read-only,,,python3 scripts/script-registration/register-scripts.py,2026-05-26T03:19:10.760000
+update-storage-table.py,scripts/storage-table/update-storage-table.py,python,,writes-report,,,python3 scripts/storage-table/update-storage-table.py,2026-05-26T03:21:24.520000

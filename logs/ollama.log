@@ -1,0 +1,8 @@
+[2026-05-26 03:35:58] [INFO] [check-ollama-status] START Checking Ollama status
+[2026-05-26 03:35:59] [INFO] [check-ollama-status] Ollama API reachable at http://127.0.0.1:11434
+[2026-05-26 03:35:59] [INFO] [check-ollama-status] Currently loaded models: 
+[2026-05-26 03:35:59] [INFO] [check-ollama-status] END Status check complete
+[2026-05-26 03:37:29] [INFO] [check-ollama-status] START Checking Ollama status
+[2026-05-26 03:37:29] [INFO] [check-ollama-status] Ollama API reachable at http://127.0.0.1:11434
+[2026-05-26 03:37:30] [INFO] [check-ollama-status] Currently loaded models: qwen2.5-coder:7b
+[2026-05-26 03:37:30] [INFO] [check-ollama-status] END Status check complete

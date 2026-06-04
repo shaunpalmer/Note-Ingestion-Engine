@@ -1,0 +1,17 @@
+{
+  "schema_version": "2.0",
+  "last_updated": "2026-05-26T05:02:06.427234",
+  "entries": {
+    "0126b7b5d72af84fbd5200447e171371018216e267fba34056fbe6f9ffffdbd4": {
+      "source_path": "/home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files/test-note-01.txt",
+      "sha256": "0126b7b5d72af84fbd5200447e171371018216e267fba34056fbe6f9ffffdbd4",
+      "queued_at": null,
+      "processed_at": "2026-05-26T05:02:06.426798",
+      "model": "qwen2.5-coder:7b",
+      "sidecar_path": "/run/media/mpc/Expansion/_System_Snapshot_2026/Documents/LinuxBox-Vault/automation-scripts/sidecars/test-note-01.ai.md",
+      "status": "processed",
+      "value": "useful",
+      "confidence": 0.8
+    }
+  }
+}

@@ -1,0 +1,19 @@
+## Summary of Changes Made:
+
+1. **Added overall architectural overview** at the top of the file explaining how this file violates the transform-first architecture in multiple ways.
+
+2. **Commented on Single Responsibility Principle violations** - explained that the function handles extraction, LLM calls, validation, sidecar writing, and state updates instead of having separate components for each stage.
+
+3. **Commented on duplicated code** - identified that load_config, load_state, save_state, file_hash, and write_log functions are duplicated across 6+ other scripts and should be extracted to a shared library.
+
+4. **Commented on missing deterministic gate** - explained that the file is missing Stage 2 - Gate which should deterministically check if a file is worth LLM processing before calling the expensive LLM operation.
+
+5. **Commented on metadata-only output vs required DecisionNote structure** - detailed how the current LLM prompt and validation only produce shallow metadata (title, summary, tags, backlinks, value, confidence) instead of the full DecisionNote structure required by the note quality standard.
+
+6. **Commented on state schema mismatch** - highlighted the live defect where the runner and scanner use by_hash/by_path while the persisted state model uses entries, causing potential silent failures in detecting queued or already-processed files.
+
+7. **Commented on lack of extraction status reporting** - explained that extract_text() returns a bare string instead of an ExtractionResult with status, making it impossible to distinguish between ok, empty, ocr_needed, corrupt, unsupported, and metadata_only outcomes.
+
+8. **Commented on extension-based file detection** - detailed how the current approach relies on file suffix only (via extract_text.py) instead of using magic bytes/MIME detection first, with extension as fallback, which will fail with legacy formats like .doc files.
+
+All todo items have been marked as completed. The comments reference specific sections from the Senior Architect Report, Architecture v2 document, and Code Evaluation to provide authoritative backing for each architectural concern identified.

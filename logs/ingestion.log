@@ -1,0 +1,31 @@
+[2026-05-26T03:35:59.733893] [INFO] [scan_documents] START Scanning incoming documents
+[2026-05-26T03:35:59.734077] [INFO] [scan_documents] Incoming path: /home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files
+[2026-05-26T03:35:59.734139] [INFO] [scan_documents] Limit: 5, Extensions: .txt,.md
+[2026-05-26T03:35:59.734597] [INFO] [scan_documents] Total matching files: 1, Already processed: 0
+[2026-05-26T03:35:59.735052] [INFO] [scan_documents] Candidates selected: 1
+[2026-05-26T03:35:59.735131] [INFO] [scan_documents] Dry-run mode — no state changes
+[2026-05-26T03:35:59.735185] [INFO] [scan_documents] END Scan complete
+[2026-05-26T03:36:09.284055] [INFO] [process_one_file] START Processing /home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files/test-note-01.txt
+[2026-05-26T03:36:09.284197] [INFO] [process_one_file] Sending to model qwen2.5-coder:7b...
+[2026-05-26T03:36:38.976814] [INFO] [process_one_file] Valid metadata: title=moving files and testing tailscale, value=useful, confidence=0.8
+[2026-05-26T03:36:39.299928] [INFO] [process_one_file] Dry-run mode — sidecar not written
+[2026-05-26T03:36:39.300039] [INFO] [process_one_file] END Processing complete (dry-run)
+[2026-05-26T03:36:51.876240] [INFO] [process_one_file] START Processing /home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files/test-note-01.txt
+[2026-05-26T03:36:51.876753] [INFO] [process_one_file] Sending to model qwen2.5-coder:7b...
+[2026-05-26T03:37:04.421956] [INFO] [process_one_file] Valid metadata: title=file migration and testing, value=useful, confidence=0.9
+[2026-05-26T03:37:04.422731] [INFO] [process_one_file] Sidecar written: /run/media/mpc/Expansion/_System_Snapshot_2026/Documents/LinuxBox-Vault/automation-scripts/sidecars/test-note-01.ai.md
+[2026-05-26T03:37:04.423103] [INFO] [process_one_file] State updated
+[2026-05-26T03:37:04.423161] [INFO] [process_one_file] END Processing complete
+[2026-05-26T03:37:13.635120] [INFO] [scan_documents] START Scanning incoming documents
+[2026-05-26T03:37:13.635229] [INFO] [scan_documents] Incoming path: /home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files
+[2026-05-26T03:37:13.635292] [INFO] [scan_documents] Limit: 5, Extensions: .txt,.md
+[2026-05-26T03:37:13.635810] [INFO] [scan_documents] Total matching files: 1, Already processed: 1
+[2026-05-26T03:37:13.636262] [INFO] [scan_documents] Candidates selected: 0
+[2026-05-26T03:37:13.636321] [INFO] [scan_documents] Dry-run mode — no state changes
+[2026-05-26T03:37:13.636372] [INFO] [scan_documents] END Scan complete
+[2026-05-26T04:06:21.315623] [INFO] [bulk_convert] START Bulk conversion: imported-text-files -> /home/mpc/Documents/LinuxBox-Vault/automation-scripts/imported-text-files
+[2026-05-26T04:06:21.316076] [INFO] [bulk_convert] Found 1 files to convert
+[2026-05-26T04:06:21.316246] [INFO] [bulk_convert] Converted 1/1 files
+[2026-05-26T04:06:21.316308] [INFO] [bulk_convert] END Bulk conversion complete
+[2026-05-26T04:06:21.943790] [INFO] [normalize_confidence] START Normalizing confidence (sigmoid)
+[2026-05-26T04:06:21.944045] [INFO] [normalize_confidence] Not enough sidecars to normalize (need >= 2)

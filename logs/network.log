@@ -1,0 +1,32 @@
+[2026-05-26 03:20:05] [INFO] [check-network-status] START Checking network status
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli available
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: DEVICE               TYPE      STATE                   CONNECTION
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: enp5s0f1             ethernet  connected               Wired connection 2
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: enp4s0               ethernet  connected               Wired connection 1
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: tailscale0           tun       connected (externally)  tailscale0
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: lo                   loopback  connected (externally)  lo
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: wlp11s0f3u4          wifi      disconnected            --
+[2026-05-26 03:20:05] [INFO] [check-network-status] nmcli: p2p-dev-wlp11s0f3u4  wifi-p2p  disconnected            --
+[2026-05-26 03:20:05] [INFO] [check-network-status] Checking IP routes...
+[2026-05-26 03:20:05] [INFO] [check-network-status] ip route: default via 192.168.1.254 dev enp4s0 proto dhcp src 192.168.1.105 metric 900
+[2026-05-26 03:20:05] [INFO] [check-network-status] ip route: 192.168.1.0/24 dev enp4s0 proto kernel scope link src 192.168.1.105 metric 900
+[2026-05-26 03:20:05] [INFO] [check-network-status] ip route: 192.168.3.0/24 dev enp5s0f1 proto kernel scope link src 192.168.3.60 metric 101
+[2026-05-26 03:20:06] [INFO] [check-network-status] OK Internet reachable (8.8.8.8)
+[2026-05-26 03:20:07] [INFO] [check-network-status] OK DNS resolution working (google.com)
+[2026-05-26 03:20:07] [INFO] [check-network-status] END Completed successfully
+[2026-05-26 03:37:27] [INFO] [check-network-status] START Checking network status
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli available
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: DEVICE               TYPE      STATE                   CONNECTION
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: enp5s0f1             ethernet  connected               Wired connection 2
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: enp4s0               ethernet  connected               Wired connection 1
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: tailscale0           tun       connected (externally)  tailscale0
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: lo                   loopback  connected (externally)  lo
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: wlp11s0f3u4          wifi      disconnected            --
+[2026-05-26 03:37:27] [INFO] [check-network-status] nmcli: p2p-dev-wlp11s0f3u4  wifi-p2p  disconnected            --
+[2026-05-26 03:37:27] [INFO] [check-network-status] Checking IP routes...
+[2026-05-26 03:37:27] [INFO] [check-network-status] ip route: default via 192.168.1.254 dev enp4s0 proto dhcp src 192.168.1.105 metric 900
+[2026-05-26 03:37:27] [INFO] [check-network-status] ip route: 192.168.1.0/24 dev enp4s0 proto kernel scope link src 192.168.1.105 metric 900
+[2026-05-26 03:37:27] [INFO] [check-network-status] ip route: 192.168.3.0/24 dev enp5s0f1 proto kernel scope link src 192.168.3.60 metric 101
+[2026-05-26 03:37:28] [INFO] [check-network-status] OK Internet reachable (8.8.8.8)
+[2026-05-26 03:37:29] [INFO] [check-network-status] OK DNS resolution working (google.com)
+[2026-05-26 03:37:29] [INFO] [check-network-status] END Completed successfully
